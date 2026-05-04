@@ -1,0 +1,94 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 36,
+    "spacing": 0,
+    "margin-top": 6,
+    "margin-left": 10,
+    "margin-right": 10,
+
+    "modules-left": ["custom/launcher", "hyprland/workspaces", "hyprland/window"],
+    "modules-center": ["clock"],
+    "modules-right": [
+        "custom/weather",
+        "tray",
+        "pulseaudio",
+        "bluetooth",
+        "network",
+        "battery",
+        "custom/power"
+    ],
+
+    "custom/launcher": {
+        "format": "󰣇",
+        "on-click": "wofi --show drun --allow-images",
+        "tooltip": false
+    },
+
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{icon}",
+        "format-icons": {
+            "1": "一",
+            "2": "二",
+            "3": "三",
+            "4": "四",
+            "5": "五",
+            "active": "●",
+            "default": "○"
+        },
+        "persistent-workspaces": {
+            "*": 5
+        }
+    },
+
+    "hyprland/window": {
+        "format": "{}",
+        "max-length": 40,
+        "separate-outputs": true,
+        "rewrite": {
+            "": "  Desktop"
+        }
+    },
+
+    "clock": {
+        "format": "{:%a  %b %d   %I:%M %p}",
+        "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
+        "calendar": {
+            "mode": "month",
+            "mode-mon-col": 3,
+            "weeks-pos": "right",
+            "on-scroll": 1,
+            "format": {
+                "months":   "<span color='#89b4fa'><b>{}</b></span>",
+                "days":     "<span color='#cdd6f4'>{}</span>",
+                "weeks":    "<span color='#94e2d5'><i>W{}</i></span>",
+                "weekdays": "<span color='#f9e2af'><b>{}</b></span>",
+                "today":    "<span color='#f38ba8'><b><u>{}</u></b></span>"
+            }
+        },
+        "actions": {
+            "on-click-right": "gnome-calendar",
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        }
+    },
+
+    "custom/weather": {
+        "exec": "~/.config/waybar/scripts/weather.sh",
+        "return-type": "json",
+        "interval": 900,
+        "on-click": "xdg-open https://wttr.in/Arlington"
+    },
+
+    "pulseaudio": {
+        "format": "{icon}  {volume}%",
+        "format-muted": "󰝟  muted",
+        "format-icons": {
+            "headphone": "󰋋",
+            "headset": "󰋎",
+            "default": ["󰕿", "󰖀", "󰕾"]
+        },
+        "on-click": "pavucontrol",
+        "on-click-right": "pactl set-sink-mute @DEFAULT_SI
