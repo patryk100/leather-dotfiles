@@ -63,3 +63,47 @@ alias wezterm='flatpak run org.wezfurlong.wezterm --config-file=$HOME/.var/app/o
 
 # autoload -U +X bashcompinit && bashcompinit
 # complete -o nospace -C /usr/bin/terraform terraform
+#
+# ----------------------------------------------------------------------------
+#  Sane line-editing keys
+#  Uses terminfo where available so it works across foot, alacritty, kitty,
+#  tmux, ssh sessions, etc. without hardcoding escape sequences.
+# ----------------------------------------------------------------------------
+
+# Make sure ZLE puts the terminal into "application mode" while editing.
+# Some terminals (foot included) only send the expected sequences for keys
+# like Home/End/Ctrl+Arrow when this mode is active.
+if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
+    autoload -Uz add-zle-hook-widget
+    function zle_application_mode_start { echoti smkx }
+    function zle_application_mode_stop  { echoti rmkx }
+    add-zle-hook-widget -Uz zle-line-init   zle_application_mode_start
+    add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
+fi
+
+# Pull key sequences from terminfo
+typeset -g -A key
+key[Home]="${terminfo[khome]}"
+key[End]="${terminfo[kend]}"
+key[Delete]="${terminfo[kdch1]}"
+key[Control-Left]="${terminfo[kLFT5]}"
+key[Control-Right]="${terminfo[kRIT5]}"
+
+# Bind them
+[[ -n "${key[Home]}"          ]] && bindkey -- "${key[Home]}"          beginning-of-line
+[[ -n "${key[End]}"           ]] && bindkey -- "${key[End]}"           end-of-line
+[[ -n "${key[Delete]}"        ]] && bindkey -- "${key[Delete]}"        delete-char
+[[ -n "${key[Control-Left]}"  ]] && bindkey -- "${key[Control-Left]}"  backward-word
+[[ -n "${key[Control-Right]}" ]] && bindkey -- "${key[Control-Right]}" forward-word
+
+# Belt-and-suspenders: also bind the literal sequences foot sends, in case
+# terminfo is missing (e.g. on a barebones SSH target).
+bindkey "^[[H"    beginning-of-line   # Home
+bindkey "^[[F"    end-of-line         # End
+bindkey "^[[3~"   delete-char         # Delete
+bindkey "^[[1;5D" backward-word       # Ctrl+Left
+bindkey "^[[1;5C" forward-word        # Ctrl+Right
+
+# Bonus: Ctrl+Backspace deletes a word backward (foot sends ^H or ^?)
+bindkey "^H"  backward-kill-word
+bindkey "^[[3;5~" kill-word           # Ctrl+Delete = delete word forward
