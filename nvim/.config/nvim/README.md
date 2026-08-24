@@ -1,34 +1,121 @@
-# AstroNvim Template
+# Stable Neovim 0.11.x+ Configuration
 
-**NOTE:** This is for AstroNvim v5+
+A minimal, maintainable Neovim config with LSP for bash, python, go, terraform, k8s yaml.
 
-A template for getting started with [AstroNvim](https://github.com/AstroNvim/AstroNvim)
+## Version Strategy
 
-## 🛠️ Installation
+This config does NOT pin commit hashes in plugin specs. Instead:
 
-#### Make a backup of your current nvim and shared folder
+1. **First install**: lazy pulls the latest from each plugin's branch
+2. **`lazy-lock.json` is auto-generated** with real, working commits
+3. **That lock file becomes your stability lock** — commit it to git
+4. **`:Lazy restore`** goes back to lock file versions if updates break things
+5. **`:Lazy update`** updates all plugins and rewrites the lock file
 
-```shell
+This is the correct pattern for lazy.nvim. Pinned commits in specs only work if the maintainer never force-pushes; branches are safer.
+
+## Installation
+
+### 1. Backup and clear
+
+```bash
 mv ~/.config/nvim ~/.config/nvim.bak
-mv ~/.local/share/nvim ~/.local/share/nvim.bak
-mv ~/.local/state/nvim ~/.local/state/nvim.bak
-mv ~/.cache/nvim ~/.cache/nvim.bak
+rm -rf ~/.local/share/nvim/lazy
 ```
 
-#### Create a new user repository from this template
+### 2. Install
 
-Press the "Use this template" button above to create a new repository to store your user configuration.
-
-You can also just clone this repository directly if you do not want to track your user configuration in GitHub.
-
-#### Clone the repository
-
-```shell
-git clone https://github.com/<your_user>/<your_repository> ~/.config/nvim
-```
-
-#### Start Neovim
-
-```shell
+```bash
+tar xzf nvim-stable-config.tar.gz -C ~/.config
+mv ~/.config/nvim-config ~/.config/nvim
 nvim
+```
+
+### 3. Wait for plugins to install
+
+Lazy will show a UI. Wait for everything to finish (green checkmarks).
+
+### 4. Install LSPs
+
+```
+:MasonInstallAll
+```
+
+### 5. Lock your versions
+
+Once everything works, commit `~/.config/nvim/lazy-lock.json` to a git repo. This is your snapshot; you can always `:Lazy restore` to get back here.
+
+## LSP Servers
+
+Installed via Mason:
+- `bash-language-server` (Bash)
+- `pyright` (Python)
+- `gopls` (Go)
+- `terraform-ls` (Terraform)
+- `yaml-language-server` (K8s YAML with schema validation)
+- `nil` (Nix)
+- `lua-language-server` (Lua)
+- `json-lsp` (JSON)
+
+Formatters/linters via null-ls:
+- `black` (Python format)
+- `gofmt`, `golangci-lint` (Go)
+- `terraform fmt`
+- `shellcheck` (Bash)
+
+## Key Bindings
+
+**General:**
+- `<Space>` = leader
+- `<Space>w` = save
+- `<Space>q` = quit
+- `<Space>e` = toggle neo-tree
+- `<Esc>` = clear search highlight
+
+**Telescope:**
+- `<Space>ff` = find files
+- `<Space>fg` = live grep
+- `<Space>fb` = buffers
+- `<Space>fh` = help
+
+**LSP:**
+- `gd` = definition (with dedup!)
+- `K` = hover
+- `gr` = references
+- `<Space>rn` = rename
+- `<Space>ca` = code action
+- `<Space>f` = format
+
+**Motion:**
+- `s` = flash jump
+- `S` = treesitter jump
+- `<C-a>` / `<C-x>` = increment/decrement
+
+## Updating
+
+```vim
+:Lazy update
+```
+
+If something breaks:
+```vim
+:Lazy restore
+```
+
+## Troubleshooting
+
+**Plugin didn't install:**
+```vim
+:Lazy sync
+```
+
+**LSP not attaching:**
+```vim
+:LspInfo
+:Mason
+```
+
+**Treesitter parser missing:**
+```vim
+:TSUpdate
 ```

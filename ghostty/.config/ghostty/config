@@ -1,0 +1,34 @@
+
+# --- Fonts ---
+# A Nerd Font is required for Starship and eza icons
+font-family = "JetBrainsMono Nerd Font"
+font-size = 14
+
+# --- Theme & Appearance ---
+theme = carbonfox
+background-opacity = 0.90
+background-blur-radius = 20
+
+# --- Window Styling ---
+# Removes the macOS titlebar for a clean, floating look
+# macos-titlebar-style = transparent
+# window-decoration = false
+window-padding-x = 10
+window-padding-y = 10
+
+# Pro tip: Automatically centers the text when you resize the window
+window-padding-balance = true 
+
+# Ensures the window resizes predictably by text cells
+window-step-resize = true
+
+# Hides the mouse cursor while typing
+mouse-hide-while-typing = true
+
+# --- Window Management & Binds ---
+keybind = cmd+d=new_split:right
+keybind = cmd+shift+d=new_split:down
+keybind = cmd+ctrl+f=toggle_fullscreen
+
+# Fixed: The correct action name is toggle_split_zoom
+keybind = cmd+ctrl+z=toggle_split_zoom
