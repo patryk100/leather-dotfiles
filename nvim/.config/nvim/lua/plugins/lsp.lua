@@ -50,13 +50,12 @@ return {
     dependencies = "nvim-lua/plenary.nvim",
     config = function()
       local null_ls = require("null-ls")
-      null_ls.setup({
+          null_ls.setup({
         sources = {
           null_ls.builtins.formatting.black.with({ extra_args = { "--line-length=100" } }),
           null_ls.builtins.formatting.gofmt,
           null_ls.builtins.formatting.terraform_fmt,
           null_ls.builtins.diagnostics.golangci_lint,
-          null_ls.builtins.diagnostics.shellcheck,
         },
       })
     end,
